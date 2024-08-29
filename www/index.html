@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marvel</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f5;
+            color: #333;
+            text-align: center;
+        }
+        header {
+            background-color: #20232a;
+            color: #61dafb;
+            padding: 1em 0;
+        }
+        header h1 {
+            margin: 0;
+        }
+        main {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 1em;
+        }
+        .comic {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 1em;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            width: 200px;
+            cursor: pointer;
+        }
+        .comic img {
+            width: 100%;
+            height: auto;
+        }
+        .comic-info {
+            padding: 1em;
+        }
+        .comic-info h2 {
+            font-size: 1.2em;
+            margin: 0 0 0.5em;
+        }
+        .comic-info p {
+            font-size: 0.9em;
+            margin: 0;
+        }
+        .comic:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        footer {
+            background-color: #20232a;
+            color: #61dafb;
+            padding: 1em 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Marvel</h1>
+    </header>
+    <main id="comics-list">
+
+    </main>
+    <footer>
+        <p>API Marvel</p>
+    </footer>
+    <script>
+        const publicKey = '56344eb5df87952297b34ecdfc7c8cdc';
+        const hash = 'dbeb6ec60e2ac0b8195cb7c2e851c2a2';
+        const url = `https://gateway.marvel.com/v1/public/comics?ts=1724958184&apikey=${publicKey}&hash=${hash}`;
+ 
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const comicsList = document.getElementById('comics-list');
+                    data.data.results.forEach(comic => {
+                        const comicElement = document.createElement('div');
+                        comicElement.classList.add('comic');
+ 
+                        const comicImage = document.createElement('img');
+                        comicImage.src = `${comic.thumbnail.path}/portrait_xlarge.${comic.thumbnail.extension}`;
+                        comicElement.appendChild(comicImage);
+ 
+                        const comicInfo = document.createElement('div');
+                        comicInfo.classList.add('comic-info');
+ 
+                        const comicTitle = document.createElement('h2');
+                        comicTitle.textContent = comic.title;
+                        comicInfo.appendChild(comicTitle);
+ 
+                        const comicDescription = document.createElement('p');
+                        comicDescription.textContent = comic.description || 'No description available';
+                        comicInfo.appendChild(comicDescription);
+ 
+                        comicElement.appendChild(comicInfo);
+                        comicsList.appendChild(comicElement);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        });
+    </script>
+</body>
+</html>
+ 
